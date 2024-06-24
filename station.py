@@ -1,5 +1,6 @@
 from installation import Installation
 
+# Class to store required information about each station
 class Station:
     def __init__(self, id: int, name: str, installations: list[Installation] = []):
         self.id = id

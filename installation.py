@@ -1,3 +1,4 @@
+# Class to store required information about installations
 class Installation:
     def __init__(self, id: int, station_id: int, param_code: str):
         self.id = id

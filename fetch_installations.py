@@ -10,6 +10,8 @@ ARG = "Lista stanowisk pomiarowych dla podanej stacji" # JSON key for installati
 ID = "Identyfikator stanowiska" # JSON key for installation id
 CODE = "Wskaźnik - kod" # JSON key for param code
 
+# Function to set fetch url, station id is rqeuired for API to work
+# Arguments for page and size are also required
 def set_installation_url(station_id: int, page: int, size: int) -> str:
     global URL
 
@@ -20,7 +22,9 @@ def set_installation_url(station_id: int, page: int, size: int) -> str:
     
     return URL + str(station_id) + "?page=" + str(page) + "&size=" + str(size)
 
-
+# Function to fetch installations for given station
+# It updates station's installations array
+# Works analogically to fetch_stations()
 def fetch_installations(station: Station):
     global PAGE_SIZE, ARG, ID, CODE
 

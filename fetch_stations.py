@@ -1,4 +1,3 @@
-import requests as rq
 from station import Station
 from fetch import fetch_url
 

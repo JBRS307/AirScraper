@@ -2,7 +2,7 @@ import requests as rq
 from time import sleep
 
 # Wrapper function for fetching.
-def fetch_url(url) -> rq.Response:
+def fetch_url(url: str) -> rq.Response:
     while True:
         res = rq.get(url)
 

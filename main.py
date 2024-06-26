@@ -1,9 +1,10 @@
 import requests as rq
+import sys
+
 from fetch_stations import fetch_stations
 from fetch_installations import fetch_installations
 from station import Station
 
-import sys
 
 # Function to parse command line arguments
 def parse_args() -> tuple[bool, bool]:
@@ -47,7 +48,7 @@ def all_at_once(stations: list[Station]):
             print(err, file=sys.stderr)
 
 # one by one work mode fetches installations for one station,
-# prints it and then sets the pointer to None so garbage
+# prints it and then sets the pointer to new empty list so garbage
 # collector can delete them. After that goes to next station
 def one_by_one(station: Station):
     try:
@@ -102,12 +103,15 @@ if __name__ == "__main__":
                 write_to_file([stations[i]], open_mode)
             else:
                 print_to_std([stations[i]])
-            # setting pointer to None
-            stations[i].installations = None
+            # setting pointer to []
+            stations[i].installations = []
+            if i == len(stations) - 1:
+                print("Success!")
     else:
         all_at_once(stations)
         if to_file:
             write_to_file(stations, 'w')
+            print("Success!")
         else:
             print_to_std(stations)
 

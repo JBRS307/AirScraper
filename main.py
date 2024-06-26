@@ -36,7 +36,7 @@ def parse_args() -> tuple[bool, bool]:
 def all_at_once(stations: list[Station]):
     for i in range(len(stations)):
         try:
-            fetch_installations(stations[i])
+            stations[i].fetch_installations()
         except rq.ConnectionError as err:
             print("Unable to connect, moving to the next station...")
             print(err, file=sys.stderr)
@@ -52,7 +52,7 @@ def all_at_once(stations: list[Station]):
 # collector can delete them. After that goes to next station
 def one_by_one(station: Station):
     try:
-        fetch_installations(station)
+        station.fetch_installations()
     except rq.ConnectionError as err:
         print("Unable to connect, station will not be modified!")
         print(err, file=sys.stderr)

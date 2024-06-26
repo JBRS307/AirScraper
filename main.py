@@ -101,12 +101,12 @@ if __name__ == "__main__":
                 # then every next station is appended to the end of file
                 open_mode = 'w' if i == 0 else 'a'
                 write_to_file([stations[i]], open_mode)
+                if i == len(stations) - 1:
+                    print("Success!")
             else:
                 print_to_std([stations[i]])
             # setting pointer to []
             stations[i].installations = []
-            if i == len(stations) - 1:
-                print("Success!")
     else:
         all_at_once(stations)
         if to_file:

@@ -3,7 +3,7 @@ from fetch_stations import fetch_stations
 from fetch_installations import fetch_installations
 from station import Station
 
-from sys import argv
+import sys
 
 # Function to parse command line arguments
 def parse_args() -> tuple[bool, bool]:
@@ -11,7 +11,7 @@ def parse_args() -> tuple[bool, bool]:
     # 0 is for "all at once" and 1 is for "one by one"
     # all other values are invalid
     try:
-        work_mode = int(argv[1])
+        work_mode = int(sys.argv[1])
         if work_mode != 0 and work_mode != 1:
             raise ValueError("Invalid argument!")
     except IndexError:
@@ -21,7 +21,7 @@ def parse_args() -> tuple[bool, bool]:
     # or be printed to stdout (0)
     # all other values are invalid
     try:
-        to_file = int(argv[2])
+        to_file = int(sys.argv[2])
         if to_file != 0 and to_file != 1:
             raise ValueError("Invalid argument!")
     except IndexError:
@@ -36,8 +36,15 @@ def all_at_once(stations: list[Station]):
     for i in range(len(stations)):
         try:
             fetch_installations(stations[i])
-        except rq.ConnectionError:
+        except rq.ConnectionError as err:
             print("Unable to connect, moving to the next station...")
+            print(err, file=sys.stderr)
+        except rq.HTTPError as err:
+            print("HTTP error, moving to the next station...")
+            print(err, file=sys.stderr)
+        except rq.Timeout as err:
+            print("Request timeout, moving to the next station...")
+            print(err, file=sys.stderr)
 
 # one by one work mode fetches installations for one station,
 # prints it and then sets the pointer to None so garbage
@@ -45,8 +52,15 @@ def all_at_once(stations: list[Station]):
 def one_by_one(station: Station):
     try:
         fetch_installations(station)
-    except rq.ConnectionError:
+    except rq.ConnectionError as err:
         print("Unable to connect, station will not be modified!")
+        print(err, file=sys.stderr)
+    except rq.HTTPError as err:
+        print("HTTP error, station will not be modified!")
+        print(err, file=sys.stderr)
+    except rq.Timeout as err:
+        print("Request timeout, station will not be modified!")
+        print(err, file=sys.stderr)
 
 # function to print to std, accepts list so it's universal
 # (for one by one mode one element list is passed)
@@ -68,9 +82,15 @@ if __name__ == "__main__":
 
     try:
         stations = fetch_stations()
-    except rq.ConnectionError:
+    except rq.ConnectionError as err:
         print("Unable to connect!")
-        exit(1)
+        raise SystemExit(err)
+    except rq.HTTPError as err:
+        print("HTTP error")
+        raise SystemExit(err)
+    except rq.Timeout as err:
+        print("Request timeout")
+        raise SystemExit(err)
     
     if work_mode:
         for i in range(len(stations)):

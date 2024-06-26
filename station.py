@@ -12,7 +12,7 @@ class Station:
     def __str__(self) -> str:
         header = f"Station #{self.id} ({self.name}):\n"
         installations_str = "\n".join([str(installation) for installation in self.installations])
-        return header + installations_str
+        return header + installations_str + "\n---"
     
     def add_installation(self, installation: Installation):
         self.installations.append(installation)

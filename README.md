@@ -40,6 +40,12 @@ WARNING: In order to specify printing mode, work mode must be specified.
 
 Any argument other than **0** or **1** will throw exception in both cases.
 
+Example:
+```shell
+python3 main.py 0 1
+```
+Program works in *all at once* mode with output written to file.
+
 ---
 ## Classes
 

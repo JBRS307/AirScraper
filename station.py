@@ -15,4 +15,6 @@ class Station:
         return header + installations_str + "\n---"
     
     def add_installation(self, installation: Installation):
+        if not isinstance(self.installations, list):
+            self.installations = []
         self.installations.append(installation)
